@@ -1,0 +1,34 @@
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        A, B = nums1, nums2
+
+        # 1. Make A the shorter array
+        if len(A) > len(B):
+            A, B = B, A
+
+        m, n = len(A), len(B)
+        half = (m + n + 1) // 2      # size of the left side
+
+        lo, hi = 0, m                # search range for the cut in A
+
+        while lo <= hi:
+            i = (lo + hi) // 2       # 2. guess the cut in A
+            j = half - i             # 3. cut in B follows
+
+            # 4. the four numbers next to the lines
+            Aleft  = A[i - 1] if i > 0 else float('-inf')
+            Aright = A[i]     if i < m else float('inf')
+            Bleft  = B[j - 1] if j > 0 else float('-inf')
+            Bright = B[j]     if j < n else float('inf')
+
+            # 5. is the line correct?
+            if Aleft <= Bright and Bleft <= Aright:
+                if (m + n) % 2 == 1:
+                    return float(max(Aleft, Bleft))
+                return (max(Aleft, Bleft) + min(Aright, Bright)) / 2
+
+            # 6. not correct, move the guess
+            elif Aleft > Bright:
+                hi = i - 1
+            else:
+                lo = i + 1
