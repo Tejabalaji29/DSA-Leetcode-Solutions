@@ -1,0 +1,21 @@
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        # nowhere to bounce, or the zigzag is wider than the text
+        if numRows == 1 or numRows >= len(s):
+            return s
+
+        rows = [""] * numRows    # one string per row
+        row = 0                  # current row
+        step = 1                 # +1 = going down, -1 = going up
+
+        for ch in s:
+            rows[row] += ch      # put the letter in its row
+
+            if row == 0:         # hit the top, go down
+                step = 1
+            elif row == numRows - 1:   # hit the bottom, go up
+                step = -1
+
+            row += step          # move to the next row
+
+        return "".join(rows)
